@@ -88,7 +88,7 @@ npm start
 
 ## Скриншоты
 
-![Скриншот](\img\1.jpg)
-![Скриншот](\img\2.jpg)
+![Скриншот](https://github.com/Anastasia-Papchenko/SnippetNews/blob/main/img/1.jpg?raw=true)
+![Скриншот](https://github.com/Anastasia-Papchenko/SnippetNews/blob/main/img/2.jpg?raw=true)
 
 ---
