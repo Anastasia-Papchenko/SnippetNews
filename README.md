@@ -1,46 +1,94 @@
-# Getting Started with Create React App
+# SnippetNews – отображение новостных карточек с дубликатами  
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Описание проекта
 
-## Available Scripts
+Реализация компонента **отображения блока новости** на React + Ant Design. Компонент отображает новость с ключевой информацией, блоком подсвеченных фрагментов текста (*highlights*), ключевыми словами и системой управления дубликатами.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Технологии
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **React** (CRA)
+- **TypeScript**
+- **Ant Design** (библиотека UI-компонентов)
+- **CSS** для стилизации
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## Структура проекта
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **src/App.tsx** — создание тестовых данных, группировка новостей по оригиналу и передача в компонент `SnippetNews`.
+- **src/components/SnippetNews.tsx** — главный компонент отображения одной карточки новости и её дубликатов.
+- **src/types.ts** — описание интерфейсов данных (`IData_SnippetNews` и связанные).
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Обработка и форматирование данных
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Перед отрисовкой данные проходят дополнительную обработку:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Форматирование даты публикации**:  
+  Используется `toLocaleString('en-GB')` для приведения даты к формату `день месяц год`.
 
-### `npm run eject`
+- **Форматирование охвата аудитории (Reach)**:  
+  Значение в зависимости от размера переводится в `K`, `M` или `B`:
+  ```tsx
+  if (value >= 1e9) return `${v}B `;
+  if (value >= 1e6) return `${v}M `;
+  if (value >= 1e3) return `${v}K `;
+  return `${value} `;
+  ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Форматирование данных трафика**:  
+    Каждая страна и её трафик переводятся в проценты и отображаются с разделением цвета
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Фильтрация ключевых слов**:  
+    Отображаются только первые 5 ключевых слов. Кнопка **Show all** позволяет показать все теги.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **Обработка дубликатов**:
+    - Используется `Set<number>`, чтобы отслеживать, какие карточки дубликатов развернуты (`openDupIds`).
+    - Функция `toggleDup(id)` позволяет по клику на превью карточки раскрывать или закрывать содержимое.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
+## Функциональные особенности
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Разделение оригинала и дубликатов**:
+    - Группировка происходит по заголовку (`TI`).
+    - Оригиналом считается запись с минимальным `ID`.
+    - Все новости с одинаковым заголовком (`TI`) объединяются в одну группу.
+    - В оригинальной карточке отображается общее количество дубликатов, которые можно раскрыть.
+    - Раскрытие списка дубликатов происходит через кнопку **View/Hide Duplicates**.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Раскрытие текста дубликатов**:
+    - При нажатии на превью карточки дубликата — открывается полный текст:
+    - Показ подсвеченных фрагментов (_highlights_)
+    - Показ полного текста новости (_abstract_)
+    - Отображение ключевых слов (_keywords_)
+    - Клик на "Show more" / "Show less" внутри карточки обрабатывается отдельно и не влияет на сворачивание всей карточки дубликата.
+
+- **Адаптивное отображение ключевых слов**:
+    - Сначала показываются 5 тегов, остальное раскрывается по клику.
+
+- **UI/UX**:
+    - Добавление иконок и элементов через Ant Design.
+
+---
+
+## Как запустить проект
+
+```bash
+npm install
+npm start
+```
+
+Проект откроется по адресу [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Скриншоты
+
+![Скриншот](\img\1.jpg)
+![Скриншот](\img\2.jpg)
+
+---
